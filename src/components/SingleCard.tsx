@@ -1,4 +1,4 @@
-import './singleCard.css';
+import './SingleCard.css'
 
 interface SingleCardProps {
   card: {
