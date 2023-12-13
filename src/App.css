@@ -1,16 +1,117 @@
 #root {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
-
-
-.card {
-  padding: 2em;
+.front {
+  height: 80px;
 }
 
-.read-the-docs {
-  color: #888;
+.back {
+  height: 80px;
+}
+
+h1 {
+  font-size: 2.2em;
+  line-height: 1.1;
+}
+
+.turns {
+  font-size: 2rem;
+  margin-top: 0;
+}
+
+.card-wrapper {
+  width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-radius: 10px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  align-items: center;
+  justify-items: center;
+  margin: auto;
+  margin-top: 30px;
+  flex-grow: 3;
+}
+
+.content-h {
+  margin: auto;
+}
+
+@media screen and (min-width:576px) and (max-width: 768px) {
+  .front {
+    height: 100px;
+  }
+
+  .back {
+    height: 100px;
+  }
+
+  .card-wrapper {
+    width: 500px;
+  }
+
+  h1 {
+    font-size: 2.2em;
+    line-height: 1.1;
+  }
+}
+
+@media screen and (min-width:768px) and (max-width: 992px) {
+  .front {
+    height: 100px;
+  }
+
+  .back {
+    height: 100px;
+  }
+
+  .card-wrapper {
+    width: 500px;
+  }
+
+  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+  }
+}
+
+@media screen and (min-width:992px) and (max-width: 1200px) {
+  .front {
+    height: 100px;
+  }
+
+  .back {
+    height: 100px;
+  }
+
+  .card-wrapper {
+    width: 500px;
+  }
+
+  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+  }
+}
+
+@media screen and (min-width:1200px) {
+  .front {
+    height: 100px;
+  }
+
+  .back {
+    height: 100px;
+  }
+
+  .card-wrapper {
+    width: 500px;
+  }
+
+  h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+  }
 }
