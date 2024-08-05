@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import SingleCard from './components/SingleCard';
+import { Images } from './constants/Images';
+import Modal from 'react-modal';
 
 interface Card {
   src: string;
@@ -9,13 +11,12 @@ interface Card {
 }
 
 const cardImages: Card[] = [
-  { src: '../public/img/gem5.jpg', matched: false, id: Math.random() },
-  { src: '../public/img/gem4.jpg', matched: false, id: Math.random() },
-  { src: '../public/img/gem2.png', matched: false, id: Math.random() },
-  { src: '../public/img/gem3.jpg', matched: false, id: Math.random() },
-  { src: '../public/img/gem6.png', matched: false, id: Math.random() },
-  { src: '../public/img/gem1.webp', matched: false, id: Math.random() }
-
+  { src: Images.gem5, matched: false, id: Math.random() },
+  { src: Images.gem4, matched: false, id: Math.random() },
+  { src: Images.gem2, matched: false, id: Math.random() },
+  { src: Images.gem3, matched: false, id: Math.random() },
+  { src: Images.gem6, matched: false, id: Math.random() },
+  { src: Images.gem1, matched: false, id: Math.random() }
 ];
 
 const App: React.FC = () => {
@@ -24,22 +25,25 @@ const App: React.FC = () => {
   const [choiceOne, setChoiceOne] = useState<Card | null>(null);
   const [choiceTwo, setChoiceTwo] = useState<Card | null>(null);
   const [disabled, setDisabled] = useState<boolean>(false);
+  const [timer, setTimer] = useState<number>(60);
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [gameResult, setGameResult] = useState<string>("");
 
-  const shuffleCards = () => {
-    const shuffledCards = [...cardImages, ...cardImages]
-      .sort(() => Math.random() - 0.5)
-      .map((card) => ({ ...card, id: Math.random() }));
+  useEffect(() => {
+    shuffleCards();
+  }, []);
 
-    setChoiceOne(null);
-    setChoiceTwo(null);
-
-    setCards(shuffledCards);
-    setTurns(0);
-  };
-
-  const handleChoice = (card: Card) => {
-    choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
-  };
+  useEffect(() => {
+    if (timer > 0 && !gameOver) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else if (timer === 0 && !gameOver) {
+      setGameOver(true);
+      setGameResult("lost");
+    }
+  }, [timer, gameOver]);
 
   useEffect(() => {
     if (choiceOne && choiceTwo) {
@@ -61,22 +65,44 @@ const App: React.FC = () => {
     }
   }, [choiceOne, choiceTwo]);
 
-  console.log(cards);
+  useEffect(() => {
+    if (cards.length > 0 && cards.every((card) => card.matched)) {
+      setGameOver(true);
+      setGameResult("won");
+    }
+  }, [cards]);
+
+  const shuffleCards = () => {
+    const shuffledCards = [...cardImages, ...cardImages]
+      .sort(() => Math.random() - 0.5)
+      .map((card) => ({ ...card, id: Math.random() }));
+
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setCards(shuffledCards);
+    setTurns(0);
+    setTimer(40);
+    setGameOver(false);
+    setGameResult("");
+  };
+
+  const handleChoice = (card: Card) => {
+    choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
+  };
+
   const resetTurn = () => {
     setChoiceOne(null);
     setChoiceTwo(null);
     setTurns((prevTurns) => prevTurns + 1);
     setDisabled(false);
   };
-  useEffect(() => {
-    shuffleCards();
-  }, []);
 
   return (
     <div>
       <div className='content-h'>
       <h1>Memory Cards Game</h1>
       <button onClick={shuffleCards}>New Game</button>
+      <p className='timer'>Time Left: {timer}s</p>
       </div>
       <div className='card-wrapper'>
         {cards.map((card) => (
@@ -86,9 +112,21 @@ const App: React.FC = () => {
             handleChoice={handleChoice}
             flipped={card === choiceOne || card === choiceTwo || card.matched}
             disabled={disabled}
-          ></SingleCard>
-        ))}</div>
-      <p className='turns'>Turns : {turns}</p>
+          />
+        ))}
+      </div>
+      <p className='turns'>Turns: {turns}</p>
+      <Modal
+        isOpen={gameOver}
+        contentLabel="Game Result"
+        className="modal"
+        overlayClassName="overlay"
+      >
+        <h2>You {gameResult}!</h2>
+        {gameResult == "won" &&(
+        <h2>Your Score {turns}</h2>)}
+        <button onClick={shuffleCards}>Play Again</button>
+      </Modal>
     </div>
   );
 };

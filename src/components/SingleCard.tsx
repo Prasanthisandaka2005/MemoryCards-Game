@@ -1,3 +1,4 @@
+import { Images } from '../constants/Images';
 import './SingleCard.css'
 
 interface SingleCardProps {
@@ -22,7 +23,7 @@ export default function SingleCard({ card, handleChoice, flipped, disabled }: Si
     <div className='card'>
       <div className={flipped ? 'flipped' : ''}>
         <img src={card.src} className='front' alt='card front' />
-        <img src='../public/img/coverImg.jpg' className='back' onClick={handleClick} alt='card back' />
+        <img src={Images.coverImg} className='back' onClick={handleClick} alt='card back' />
       </div>
     </div>
   );
